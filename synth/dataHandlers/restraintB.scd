@@ -9,18 +9,15 @@ h[k][\left][\exit] = h[k][\right][\exit] = {
 
 h[k][\stop] = {
 	Pbindef(k).stop;
-	h[k][\reset].value;
+	~fx[\reverb].set(\roomSize, 0.5);
 };
 
 h[k][\start] = {
+	h[k][\left][\data].value;
 	Pbindef(k).play(quant: 0)
 };
 
-h[k][\reset] = {
-	h[k][\left][\data].value;
-};
-
-(h[k][\left][\data] = {
+h[k][\left][\data] = {
 	var distance, steps;
 	(~data[\numHands] != 2).if({~data[\distance] = 450;});
 	distance = ~data[\distance].linlin(140, 450, 0, 1);
@@ -28,7 +25,7 @@ h[k][\reset] = {
 
 	Pbindef(k,
 		\pan, Pwhite(distance.neg, distance),
-		\legato, distance.lincurve(0,1,1, 1, 4),
+		\legato, distance.lincurve(0,1,1, 2, 4),
 		\cutoff, Pexprand(600, 10000),
 		\mtranspose, steps.round(1),
 		\rq, Pexprand(
@@ -38,7 +35,7 @@ h[k][\reset] = {
 			distance.linlin(0,1,600,2000),
 			distance.linlin(0,1,1000,10000)
 		),
-		\atk, distance.linexp(0,1,0.01,0.15),
+		\atk, distance.linexp(0,1,0.01,0.1),
 		\degree, Pxrand((steps.neg..steps*2+5), inf),
 		\scale, Pwrand(
 			[Scale.minorPentatonic, Scale.phrygian],
@@ -54,11 +51,10 @@ h[k][\reset] = {
 	].normalizeSum);
 	TempoClock.default.tempo_(distance.lincurve(0, 1, 200/60, 100/60, -5));
 	~fx[\reverb].set(
-		\roomSize, distance.linlin(0,1,0.2,0.7),
-		\reverb, distance.linlin(0,1,0.2,0.6)
+		\roomSize, distance.linlin(0,1,0.2,0.5)
 	);
 };
-)
+
 Pbindef(k,
 	\instrument, \tri,
 	\root, 0,
@@ -68,9 +64,7 @@ Pbindef(k,
 		[1/16, 1/8, Rest(1/16), Rest(1/8)],
 		Pdefn(\durWeights, [0, 1, 1, 3].normalizeSum),
 		inf) * 4,
-	\db, Pgauss(-25, 2),
+	\db, Pgauss(-15, 2),
 	\out, ~bus[\reverb],
 	\group, ~group[\synth]
 );
-
-h[k][\reset].value;
