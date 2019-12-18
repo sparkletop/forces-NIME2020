@@ -111,7 +111,7 @@ h = IdentityDictionary.new;
 		});
 		~data[\mode] = msg[1].asSymbol;
 		h[msg[1].asSymbol][\start].value;
-		"mode change:".post; msg[1].postln;
+		"Mode change: ".post; msg[1].postln;
 	}, '/mode', ~leap);
 
 	OSCdef(\off, {
