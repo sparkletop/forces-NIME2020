@@ -11,6 +11,7 @@ ServerQuit.removeAll;
 
 // --- 2. global variables
 ~out = 0;
+~confidence = 0.3;
 
 // ~data holds the most recent global data from the leap controller
 ~data = IdentityDictionary.newFrom([
@@ -53,7 +54,8 @@ h = IdentityDictionary.new;
 		~fx[\reverb] = Synth(\reverb, [
 			\in, ~bus[\reverb],
 			\out, ~bus[\master],
-			\reverb, 0.2
+			\reverb, 0.2,
+			\roomSize, 0.5
 		], ~group[\fx]);
 		~master = Synth(\master, [
 			\in, ~bus[\master],
@@ -94,7 +96,7 @@ h = IdentityDictionary.new;
 			arg msg; var data, mode;
 			data = msg[1..].asDict;
 			mode = ~data[\mode];
-			(data[\confidence] > 0.2).if({
+			(data[\confidence] > ~confidence).if({
 				h[mode][side][\data].value(data);
 			});
 		}, '/'++side++'/data', ~leap);
@@ -109,7 +111,7 @@ h = IdentityDictionary.new;
 		});
 		~data[\mode] = msg[1].asSymbol;
 		h[msg[1].asSymbol][\start].value;
-		~log.value;
+		"mode change:".post; msg[1].postln;
 	}, '/mode', ~leap);
 
 	OSCdef(\off, {
@@ -143,14 +145,17 @@ ServerQuit.add(~cleanup);
 s.waitForBoot({
 
 	~loadSubDir.value("SynthDefs");
+	~buffers = ~loadBufDir.value("samples");
 	s.sync;
 
 	ServerTree.add(~makeNodes);
 	s.freeAll;
 	s.sync;
 
-	~makeHandlers.value;
-
-	"Load complete.".postln;
+	fork {
+		2.wait;
+		~makeHandlers.value;
+		"Load complete.".postln;
+	}
 });
 )

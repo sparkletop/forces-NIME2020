@@ -12,3 +12,23 @@
 		)
 	};
 };
+
+~loadBufDir = {
+	arg subDir, fileTypes = ["wav", "aiff", "ogg"];
+	var bufferArr, subDirPath;
+	subDirPath = PathName.new(thisProcess.nowExecutingPath).pathOnly;
+	subDirPath = subDirPath +/+ PathName.new(subDir.asString);
+	bufferArr = subDirPath
+	.files
+	.select({
+		arg file;
+		fileTypes.includesEqual(file.extension);
+	})
+	.collect({
+		arg file;
+		file.postln;
+		Buffer.read(s, file.fullPath, action: {
+			"loaded" + file.fullPath;
+		});
+	});
+};

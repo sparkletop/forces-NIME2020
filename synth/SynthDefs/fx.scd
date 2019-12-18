@@ -12,4 +12,4 @@ SynthDef.new(\reverb, {
 	sig = In.ar(in, 2);
 	sig = FreeVerb2.ar(sig[0], sig[1], reverb, roomSize, damp);
 	Out.ar(out, sig);
-}, 0.2!5).add;
+}, 0.1!5).add;
