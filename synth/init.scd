@@ -76,7 +76,7 @@ h = IdentityDictionary.new;
 	h[name][\left][\data]   = {nil;};
 	h[name][\right][\data]  = {nil;};
 	h[name][\start]         = {nil;};
-	h[name][\reset]         = {nil;};
+	h[name][\stop]         = {nil;};
 };
 
 ~makeHandlers = {
@@ -117,7 +117,7 @@ h = IdentityDictionary.new;
 	OSCdef(\off, {
 		h[~data[\mode]][\stop].value;
 		~data[\mode] = \off;
-		~log.value;
+		~group[\synth].set(\gate, 0);
 	}, '/mode/off', ~leap);
 
 	~newHandler.value(\off);
