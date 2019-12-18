@@ -1,29 +1,28 @@
-k = \example2;
-~newHandler.value(k);
+~newHandler.value(\e2);
 
-h[k][\left][\exit] = h[k][\right][\exit] = {
+h[\e2][\left][\exit] = h[\e2][\right][\exit] = {
 	(~data[\numHands] < 2).if({
-		h[k][\left][\data].value;
+		h[\e2][\left][\data].value;
 	});
 };
 
-h[k][\stop] = {
-	Pbindef(k).stop;
+h[\e2][\stop] = {
+	Pbindef(\e2).stop;
 	~fx[\reverb].set(\roomSize, 0.5);
 };
 
-h[k][\start] = {
-	h[k][\left][\data].value;
-	Pbindef(k).play(quant: 0)
+h[\e2][\start] = {
+	h[\e2][\left][\data].value;
+	Pbindef(\e2).play(quant: 0)
 };
 
-h[k][\left][\data] = {
+h[\e2][\left][\data] = {
 	var distance, steps;
 	(~data[\numHands] != 2).if({~data[\distance] = 450;});
 	distance = ~data[\distance].linlin(140, 450, 0, 1);
 	steps = (distance * 5).round(1);
 
-	Pbindef(k,
+	Pbindef(\e2,
 		\pan, Pwhite(distance.neg, distance),
 		\legato, distance.lincurve(0,1,1, 2, 4),
 		\cutoff, Pexprand(600, 10000),
@@ -55,7 +54,7 @@ h[k][\left][\data] = {
 	);
 };
 
-Pbindef(k,
+Pbindef(\e2,
 	\instrument, \tri,
 	\root, 0,
 	\scale, Scale.minorPentatonic,
