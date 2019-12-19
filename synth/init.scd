@@ -17,7 +17,8 @@ ServerQuit.removeAll;
 ~data = IdentityDictionary.newFrom([
 	\mode, \off,
 	\distance, 100,
-	\numHands, 0
+	\numHands, 0,
+	\translationLength, 0
 ]);
 
 // source of OSC-data from leap motion controller
@@ -76,7 +77,7 @@ h = IdentityDictionary.new;
 	h[name][\left][\data]   = {nil;};
 	h[name][\right][\data]  = {nil;};
 	h[name][\start]         = {nil;};
-	h[name][\stop]         = {nil;};
+	h[name][\stop]          = {nil;};
 };
 
 ~makeHandlers = {
