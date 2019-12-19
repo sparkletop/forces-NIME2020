@@ -25,7 +25,6 @@ h[\e2][\left][\data] = {
 	Pbindef(\e2,
 		\pan, Pwhite(distance.neg, distance),
 		\legato, distance.lincurve(0,1,1, 2, 4),
-		\cutoff, Pexprand(600, 10000),
 		\mtranspose, steps.round(1),
 		\rq, Pexprand(
 			distance.linlin(0,1,0.3,0.7),
@@ -63,7 +62,7 @@ Pbindef(\e2,
 		[1/16, 1/8, Rest(1/16), Rest(1/8)],
 		Pdefn(\durWeights, [0, 1, 1, 3].normalizeSum),
 		inf) * 4,
-	\db, Pgauss(-15, 2),
+	\db, Pgauss(-10, 2),
 	\out, ~bus[\reverb],
 	\group, ~group[\synth]
 );

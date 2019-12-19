@@ -10,7 +10,7 @@ h[\e1][\start] = {
 		\group, ~group[\synth],
 		\trigFreq, 150,
 		\dur, 0.15,
-		\range, 0.0005
+		\range, 0.005
 	]);
 };
 
@@ -20,10 +20,12 @@ h[\e1][\stop] = {
 
 h[\e1][\right][\enter] = {
 	h[\e1][\g].set(\pointerFreqScale, 0);
+	h[\e1][\g].set(\range, 0.2);
 };
 
 h[\e1][\right][\exit] = {
 	h[\e1][\g].set(\pointerFreqScale, 1);
+	h[\e1][\g].set(\range, 0.005);
 };
 
 h[\e1][\left][\data] = {|data|
