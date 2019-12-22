@@ -80,17 +80,19 @@ h = IdentityDictionary.new;
 	h[name][\stop]          = {nil;};
 };
 
-~makeHandlers = {
+~makeHandlers = Task({
 	OSCdef.freeAll;
+	0.5.wait;
+
 	// register wrappers for data handlers
 	[\left, \right].do{|side|
-		OSCdef(side++\Enter, {
+		OSCdef(side++\Enter, { |msg|
 			var mode = ~data[\mode];
-			h[mode][side][\enter].value;
+			h[mode][side][\enter].value(msg[1]);
 		}, '/'++side++'/enter', ~leap);
-		OSCdef(side++\Exit, {
+		OSCdef(side++\Exit, { |msg|
 			var mode = ~data[\mode];
-			h[mode][side][\exit].value;
+			h[mode][side][\exit].value(msg[1]);
 		}, '/'++side++'/exit',  ~leap);
 
 		OSCdef(side++\Data, {
@@ -104,8 +106,12 @@ h = IdentityDictionary.new;
 	};
 
 	// register handlers for global data
-	OSCdef(\distance, {|msg| ~data[\distance] = msg[1];}, '/data/distance', ~leap);
-	OSCdef(\numHands, {|msg| ~data[\numHands] = msg[1];}, '/data/numHands', ~leap);
+	OSCdef(\distance, {|msg|
+		~data[\distance] = msg[1];
+	}, '/data/distance', ~leap);
+	OSCdef(\numHands, {|msg|
+		~data[\numHands] = msg[1];
+	}, '/data/numHands', ~leap);
 	OSCdef(\mode, { |msg|
 		(~data[\mode] != \off).if({
 			h[~data[\mode]][\stop].value;
@@ -124,7 +130,9 @@ h = IdentityDictionary.new;
 	~newHandler.value(\off);
 
 	~loadSubDir.value("dataHandlers");
-};
+
+	"Load complete.".postln;
+});
 
 ~cleanup = {
 	s.newBusAllocators;
@@ -150,13 +158,7 @@ s.waitForBoot({
 	s.sync;
 
 	ServerTree.add(~makeNodes);
+	ServerTree.add({~makeHandlers.start});
 	s.freeAll;
-	s.sync;
-
-	fork {
-		2.wait;
-		~makeHandlers.value;
-		"Load complete.".postln;
-	}
 });
 )
