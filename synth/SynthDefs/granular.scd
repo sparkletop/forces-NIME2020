@@ -2,7 +2,7 @@ SynthDef.new(\cloud,{
 	arg buf, trigFreq = 50, dur = 0.2, rate = 1,
 	spread = 0, range = 0, pointerFreqScale = 1,
 	atk = 0.2, rel = 1, gate = 1, amp = 0.8,
-	rq = 1, cutoff = 10000;
+	rq = 1, cutoff = 10000, out = 0;
 	var env, sig, trig, pos, pan, vol, pointerFreq;
 	trig = Dust.ar(trigFreq);
 	pointerFreq = BufDur.kr(buf).reciprocal * pointerFreqScale;
@@ -14,5 +14,5 @@ SynthDef.new(\cloud,{
 	sig = GrainBuf.ar(2, trig, dur, buf, rate, pos, pan: pan);
 	sig = RLPF.ar(sig, cutoff.lag2(1), rq);
 	sig = Limiter.ar(sig * env) * amp;
-	Out.ar(0, sig);
+	Out.ar(out, sig);
 }).add;
