@@ -113,9 +113,8 @@ h = IdentityDictionary.new;
 		~data[\numHands] = msg[1];
 	}, '/data/numHands', ~leap);
 	OSCdef(\mode, { |msg|
-		(~data[\mode] != \off).if({
-			h[~data[\mode]][\stop].value;
-		});
+		h[~data[\mode]][\stop].value;
+		~group[\synth].set(\gate, 0);
 		~data[\mode] = msg[1].asSymbol;
 		h[msg[1].asSymbol][\start].value;
 		"Mode change: ".post; msg[1].postln;
