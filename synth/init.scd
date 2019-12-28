@@ -33,6 +33,7 @@ h = IdentityDictionary.new;
 
 ~makeBusses = {
 	~bus = IdentityDictionary.newFrom([
+		\distortion, Bus.audio(s, 2),
 		\reverb, Bus.audio(s, 2),
 		\master, Bus.audio(s, 2)
 	]);
@@ -45,23 +46,24 @@ h = IdentityDictionary.new;
 		~group[\synth] = Group.new(s);
 
 		~group[\fx] = Group.new(~group[\synth], \addAfter);
-		~group[\master] = Group.new(~group[\fx], \addAfter);
-
-		// Synths
-		~synth = IdentityDictionary.new;
 
 		// FX
 		~fx = IdentityDictionary.new;
+		~fx[\distortion] = Synth(\distortion, [
+			\in, ~bus[\distortion],
+			\out, ~bus[\reverb],
+			\gain, 0
+		], ~group[\fx]);
 		~fx[\reverb] = Synth(\reverb, [
 			\in, ~bus[\reverb],
 			\out, ~bus[\master],
 			\reverb, 0.2,
 			\roomSize, 0.5
-		], ~group[\fx]);
+		], ~fx[\distortion], \addAfter);
 		~master = Synth(\master, [
 			\in, ~bus[\master],
 			\out, ~out
-		], ~group[\master]);
+		], ~group[\fx], \addToTail);
 	});
 };
 
@@ -82,7 +84,7 @@ h = IdentityDictionary.new;
 
 ~makeHandlers = Task({
 	OSCdef.freeAll;
-	0.5.wait;
+	1.wait;
 
 	// register wrappers for data handlers
 	[\left, \right].do{|side|
@@ -151,13 +153,13 @@ ServerQuit.add(~cleanup);
 
 // --- 5. boot server
 s.waitForBoot({
-
-	~loadSubDir.value("SynthDefs");
-	~buffers = ~loadBufDir.value("samples");
-	s.sync;
-
-	ServerTree.add(~makeNodes);
-	ServerTree.add({~makeHandlers.start});
+	s.bind({
+		~loadSubDir.value("SynthDefs");
+		s.sync;
+		~buffers = ~loadBufDir.value("samples");
+		ServerTree.add(~makeNodes);
+		ServerTree.add({~makeHandlers.start});
+	});
 	s.freeAll;
 });
 )

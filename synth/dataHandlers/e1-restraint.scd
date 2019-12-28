@@ -1,7 +1,5 @@
 ~newHandler.value(\e1);
 
-
-
 h[\e1][\start] = {
 	h[\e1][\g] = nil;
 	h[\e1][\g].set(\gate, 0);

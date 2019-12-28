@@ -20,15 +20,12 @@
 	subDirPath = subDirPath +/+ PathName.new(subDir.asString);
 	bufferArr = subDirPath
 	.files
-	.select({
-		arg file;
+	.select({ |file|
 		fileTypes.includesEqual(file.extension);
 	})
-	.collect({
-		arg file;
-		file.postln;
+	.collect({ |file|
 		Buffer.read(s, file.fullPath, action: {
-			"loaded" + file.fullPath;
+			("Loaded" + file.fileName).postln;
 		});
 	});
 };

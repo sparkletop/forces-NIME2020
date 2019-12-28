@@ -7,7 +7,7 @@ h[\e3][\thresholdYhigh] = 300;
 h[\e3][\start] = {
 	h[\e3][\s] = Synth(\sampler, [
 		\out, ~bus[\reverb],
-		\buf, ~buffers[4],
+		\buf, ~buffers[1],
 		\randScale, 5
 	], ~group[\synth])
 };
