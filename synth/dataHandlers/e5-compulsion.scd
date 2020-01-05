@@ -1,79 +1,58 @@
 ~newHandler.value(\e5);
 
-// minimum hand movement vector length to trigger sound
-h[\e5][\threshold] = 5;
-
-// time to hold max amplitude after hand movement goes below threshold
-h[\e5][\hold] = 1;
-
 h[\e5][\start] = {
-	h[\e5][\right][\s] = Synth(\rez, [
-		\amp, 0.1,
-		\gate, 0,
-		\out, ~bus[\reverb]
-	], ~group[\synth]);
-};
-
-h[\e5][\right][\exit] = {
-	h[\e5][\right][\s].set(\gate, 0);
+	h[\e5][\right][\data].value(Dictionary.newFrom([
+		\translationLength, 0,
+		\palmPosY, 100,
+		\palmPosX, 0,
+	]))
 };
 
 h[\e5][\stop] = {
-	~group[\synth].set(\endGate, 0);
+	Pdef(\e5).stop;
 };
 
+h[\e5][\distribution] = Env.new([
+	[1,0,0],
+	[0,1,0],
+	[0,0,1]
+], 0.5!2);
 
-// preconfigured arrays to control amplitudes of resonators at different hand positions
-h[\e5][\ampMap] = Array.series(16, 0, 1/15).collect({ |i|
-	Array.series(16, 0, 1/15).collect({ |x|
-		(1-(i-x).abs).clip(0,1);
-	});
-});
-
-// task to reset amplitude and hold flag
-h[\e5][\right][\t] = Task.new({{
-	h[\e5][\right][\maxed] = false;
-	h[\e5][\amp] = 0.2;
-	h[\e5][\hold].wait;
-}.loop});
+h[\e5][\right][\exit] = {
+	var data = ~data[\right].copy;
+	data[\translationLength] = 0;
+	Task.new({
+		0.1.wait;
+		h[\e5][\right][\data].value(data);
+	}).play;
+};
 
 h[\e5][\right][\data] = { |data|
-	if (data[\translationLength] > h[\e5][\threshold],
-		{
-			var amp, calcAmp;
-			calcAmp = data[\translationLength].linexp(h[\e5][\threshold], 15, 0.2,1);
-			if (calcAmp > h[\e5][\right][\amp] || h[\e5][\right][\maxed].not, {
-				/* a longer translation vector has
-				been detected in current gesture */
-				amp = calcAmp;
-				h[\e5][\right][\amp] = calcAmp;
-				h[\e5][\right][\maxed] = true;
-				h[\e5][\right][\t].stop;
-				h[\e5][\right][\t].start;
-			}, {
-				/* hand is still moving above threshold
-				   but not faster than before*/
-				amp = h[\e5][\right][\amp]; // we use previous value
-			});
-
-			h[\e5][\right][\s].set(
-				\gate, 1,
-				\rel, 1,
-				\pan, data[\palmPosX]
-				.linlin(-150,150,-1,1),
-			);
-			h[\e5][\right][\s].setn(\amps, h[\e5][\ampMap][
-				data[\palmPosY]
-				.linlin(100,400,0,15)
-				.round(1)
-				.asInteger
-			] * amp
-			);
-		}, {
-			// hand is present, but not moving fast enough
-			h[\e5][\right][\s].set(
-				\gate, 0
-			);
-			h[\e5][\right][\amp] = 0.2;
-	});
+	var translationDist = h[\e5][\distribution].at(data[\translationLength].linlin(5,15,0,1)).normalizeSum;
+	Pdef(\e5,
+		Pbind(
+			\instrument, \fm,
+			\db, -20,
+			\dur, 0.1,
+			\scale, Scale.minorPentatonic,
+			\degree, Pwrand([
+				0,
+				Pxrand([0,3,5]),
+				Pxrand([0,1,3,5,9]),
+			], translationDist,	inf).clump(2),
+			\modVib, Pwrand([1.1,1.4,1.8], translationDist, inf),
+			\freqRand, Pwrand([1.001,1.01,1.08], translationDist, inf),
+			\octave, Pwrand(
+				[2,3,4],
+				h[\e5][\distribution].at(data[\palmPosY].linlin(100,400,0,1)).normalizeSum,
+				inf
+			),
+			\index, data[\palmPosX].lincurve(-250,-25,50,3,-2),
+			\cRatio, data[\palmPosY].abs.lincurve(100,400,2,20,3).round(1),
+			\mRatio, Pkey(\cRatio) * data[\palmPosX].lincurve(25,250,2,10,3).round(0.5),
+			\out, ~bus[\reverb],
+			\group, ~group[\synth]
+		)
+	).play.quant_(0);
 };
+

@@ -100,6 +100,7 @@ h = IdentityDictionary.new;
 		OSCdef(side++\Data, {
 			arg msg; var data, mode;
 			data = msg[1..].asDict;
+			~data[side] = msg[1..].asDict;
 			mode = ~data[\mode];
 			(data[\confidence] > ~confidence).if({
 				h[mode][side][\data].value(data);
