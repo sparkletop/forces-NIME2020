@@ -129,6 +129,14 @@ h = IdentityDictionary.new;
 		~group[\synth].set(\gate, 0);
 	}, '/mode/off', ~leap);
 
+	OSCdef(\reset, {
+		Task.new({
+			~master.set(\amp, 0);
+			0.15.wait;
+			s.freeAll;
+		}).play;
+	}, '/reset', ~leap);
+
 	~newHandler.value(\off);
 
 	~loadSubDir.value("dataHandlers");
