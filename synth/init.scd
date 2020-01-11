@@ -49,17 +49,12 @@ h = IdentityDictionary.new;
 
 		// FX
 		~fx = IdentityDictionary.new;
-		~fx[\distortion] = Synth(\distortion, [
-			\in, ~bus[\distortion],
-			\out, ~bus[\reverb],
-			\gain, 0
-		], ~group[\fx]);
 		~fx[\reverb] = Synth(\reverb, [
 			\in, ~bus[\reverb],
 			\out, ~bus[\master],
 			\reverb, 0.2,
 			\roomSize, 0.5
-		], ~fx[\distortion], \addAfter);
+		], ~group[\fx]);
 		~master = Synth(\master, [
 			\in, ~bus[\master],
 			\out, ~out
