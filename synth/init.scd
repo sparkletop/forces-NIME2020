@@ -21,9 +21,6 @@ ServerQuit.removeAll;
 	\translationLength, 0
 ]);
 
-// source of OSC-data from leap motion controller
-~leap = NetAddr("127.0.0.1", 57121);
-
 // h stores rerences to different handlers for incoming controller data
 h = IdentityDictionary.new;
 
@@ -86,11 +83,11 @@ h = IdentityDictionary.new;
 		OSCdef(side++\Enter, { |msg|
 			var mode = ~data[\mode];
 			h[mode][side][\enter].value(msg[1]);
-		}, '/'++side++'/enter', ~leap);
+		}, '/'++side++'/enter');
 		OSCdef(side++\Exit, { |msg|
 			var mode = ~data[\mode];
 			h[mode][side][\exit].value(msg[1]);
-		}, '/'++side++'/exit',  ~leap);
+		}, '/'++side++'/exit');
 
 		OSCdef(side++\Data, {
 			arg msg; var data, mode;
@@ -100,29 +97,29 @@ h = IdentityDictionary.new;
 			(data[\confidence] > ~confidence).if({
 				h[mode][side][\data].value(data);
 			});
-		}, '/'++side++'/data', ~leap);
+		}, '/'++side++'/data');
 	};
 
 	// register handlers for global data
 	OSCdef(\distance, {|msg|
 		~data[\distance] = msg[1];
-	}, '/data/distance', ~leap);
+	}, '/data/distance');
 	OSCdef(\numHands, {|msg|
 		~data[\numHands] = msg[1];
-	}, '/data/numHands', ~leap);
+	}, '/data/numHands');
 	OSCdef(\mode, { |msg|
 		h[~data[\mode]][\stop].value;
 		~group[\synth].set(\gate, 0);
 		~data[\mode] = msg[1].asSymbol;
 		h[msg[1].asSymbol][\start].value;
 		"Mode change: ".post; msg[1].postln;
-	}, '/mode', ~leap);
+	}, '/mode');
 
 	OSCdef(\off, {
 		h[~data[\mode]][\stop].value;
 		~data[\mode] = \off;
 		~group[\synth].set(\gate, 0);
-	}, '/mode/off', ~leap);
+	}, '/mode/off');
 
 	OSCdef(\reset, {
 		Task.new({
@@ -130,7 +127,7 @@ h = IdentityDictionary.new;
 			0.15.wait;
 			s.freeAll;
 		}).play;
-	}, '/reset', ~leap);
+	}, '/reset');
 
 	~newHandler.value(\off);
 

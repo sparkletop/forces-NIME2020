@@ -1,0 +1,43 @@
+{
+  "supercolliderAddress": { "localAddress": "127.0.0.1", "remotePort": 57120 },
+  "oscBridgePort": 4000,
+  "browserPort": 3000,
+  "verbose": true,
+  "resetTime": 1000,
+  "leapSettings": {
+    "handPresenceCheckInterval": 5,
+    "runInBackground": true
+  },
+  "modes": [
+    {
+      "id": "e1",
+      "hands": "right",
+      "instruction": "Use right hand only.",
+      "label": "Example 1"
+    },
+    {
+      "id": "e2",
+      "hands": "left right",
+      "instruction": "Use both hands at the same time.",
+      "label": "Example 2"
+    },
+    {
+      "id": "e3",
+      "hands": "right",
+      "instruction": "Use right hand only.",
+      "label": "Example 3"
+    },
+    {
+      "id": "e4",
+      "hands": "left right",
+      "instruction": "Use one or both hands.",
+      "label": "Example 4"
+    },
+    {
+      "id": "e5",
+      "hands": "right",
+      "instruction": "Use right hand only.",
+      "label": "Example 5"
+    }
+  ]
+}

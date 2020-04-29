@@ -1,2 +1,3 @@
-synth/samples/*
-synth/scratchpad.scd
+node_modules
+.cache
+public

@@ -1,0 +1,130 @@
+html {
+  --bg: rgb(240, 240, 238);
+  --off-btn-bg: rgb(215, 218, 215);
+  --off-btn-fg: rgb(30, 60, 30);
+  --hover-btn-bg: rgb(230, 233, 230);
+  --hover-btn-fg: var(--off-btn-fg);
+  --on-btn-bg: rgb(255, 255, 255);
+  --on-btn-fg: rgb(0, 60, 0);
+}
+
+.hidden {
+  display: none;
+}
+
+body {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.2em;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 95vh;
+}
+
+#hands {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+#hands svg {
+  transition: all 0.2s ease;
+  width: 17em;
+  filter: url(#blur);
+  fill: #b6cfae;
+}
+
+#hands svg.disabled {
+  fill: rgb(221, 221, 221);
+}
+
+#hands svg.active {
+  fill: #00cc00;
+  filter: none;
+}
+
+h1 {
+  text-align: center;
+}
+
+main {
+  display: flex;
+  justify-content: space-evenly;
+  width: 90vw;
+  align-items: center;
+}
+
+.btn {
+  color: var(--off-btn-fg);
+  background: var(--off-btn-bg);
+  padding: 0.9em;
+  border-radius: 0.3em;
+  margin: 0.5em;
+  transition: all 0.4s ease;
+  text-align: center;
+  margin-right: 1.5em;
+  width: 12em;
+  box-shadow: 3px 3px 10px -5px rgba(0, 10, 0, 0.5);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.btn:hover {
+  color: var(--hover-btn-fg);
+  background: var(--hover-btn-bg);
+  cursor: pointer;
+  box-shadow: 5px 5px 10px -5px rgba(15, 36, 10, 0.4);
+}
+
+.options .option.active {
+  color: var(--on-btn-fg);
+  background: var(--on-btn-bg);
+  box-shadow: 5px 5px 10px -5px rgba(15, 36, 10, 0.5);
+}
+
+#stop {
+  background: rgb(214, 168, 168);
+  color: rgb(63, 63, 63);
+}
+
+#stop:hover {
+  background: rgb(235, 68, 68);
+  color: rgb(236, 236, 236);
+  cursor: pointer;
+}
+
+.popup {
+  position: fixed;
+  bottom: 5vh;
+  right: center;
+  padding: 0.7em;
+  transition: all 0.8s ease;
+  color: var(--off-btn-fg);
+}
+
+.popup.hidden {
+  color: rgba(255, 255, 255, 0);
+}
+
+.reset {
+  position: fixed;
+  bottom: 0.3em;
+  right: 0.3em;
+  padding: 0.5em;
+  transition: all 0.4s ease;
+  color: var(--off-btn-fg);
+  background: rgba(214, 168, 168, 0.74);
+  border-radius: 0.4em;
+}
+
+.reset:hover {
+  cursor: pointer;
+  background: rgb(235, 68, 68);
+  color: rgb(250, 250, 250);
+}
