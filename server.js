@@ -3,7 +3,11 @@
 const config = require('./config.json');
 const express = require('express');
 const osc = require('osc');
-const io = require('socket.io')();
+const io = require('socket.io')({
+  cors: {
+    origin: '*',
+  },
+});
 
 const logV = (...args) => {
   if (config.verbose) {

@@ -1,6 +1,6 @@
 {
   "name": "forces",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "User interface for a study on mid-air musical interfaces using the Leap Motion controller",
   "main": "server.js",
   "scripts": {
@@ -11,14 +11,14 @@
   "author": "Anders Eskildsen",
   "license": "Apache-2.0",
   "devDependencies": {
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
     "express": "^4.17.1",
     "leapjs": "github:leapmotion/leapjs",
     "osc": "^2.4.1",
-    "socket.io": "^2.3.0",
-    "socket.io-client": "^2.3.0"
+    "socket.io": "^4.0.0",
+    "socket.io-client": "^4.0.0"
   },
   "repository": {
     "type": "git",
